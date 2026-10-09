@@ -3,9 +3,12 @@
    ========================================================== */
 
 :root {
-  --riel: #0f2a43;          /* azul riel: cabecera y textos fuertes */
-  --riel-medio: #1d4a73;    /* acento principal, enlaces y botones */
-  --senal: #f2b705;         /* amarillo de señalización, uso mínimo */
+  --riel: #0f2a43;
+  /* azul riel: cabecera y textos fuertes */
+  --riel-medio: #1d4a73;
+  /* acento principal, enlaces y botones */
+  --senal: #f2b705;
+  /* amarillo de señalización, uso mínimo */
   --fondo: #eef2f6;
   --superficie: #ffffff;
   --borde: #d3dce6;
@@ -22,9 +25,15 @@
   --ancho: 1120px;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
@@ -59,7 +68,10 @@ body {
   border-radius: 8px;
   text-decoration: none;
 }
-.skip-link:focus { top: 1rem; }
+
+.skip-link:focus {
+  top: 1rem;
+}
 
 :focus-visible {
   outline: 3px solid var(--senal);
@@ -90,11 +102,9 @@ body {
   position: absolute;
   inset: auto 0 0 0;
   height: 6px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--senal) 0 28px,
-    transparent 28px 40px
-  );
+  background: repeating-linear-gradient(90deg,
+      var(--senal) 0 28px,
+      transparent 28px 40px);
 }
 
 .cabecera__linea {
@@ -177,7 +187,9 @@ a.tarjeta:hover {
   transform: translateY(-2px);
 }
 
-a.tarjeta:active { transform: translateY(0); }
+a.tarjeta:active {
+  transform: translateY(0);
+}
 
 .tarjeta--inactiva {
   background: #f7f9fb;
@@ -208,7 +220,10 @@ a.tarjeta:active { transform: translateY(0); }
   color: var(--texto-suave);
 }
 
-.tarjeta__icono svg { width: 1.7rem; height: 1.7rem; }
+.tarjeta__icono svg {
+  width: 1.7rem;
+  height: 1.7rem;
+}
 
 .etiqueta {
   display: inline-flex;
@@ -220,6 +235,7 @@ a.tarjeta:active { transform: translateY(0); }
   font-weight: 700;
   line-height: 1.3;
 }
+
 .etiqueta::before {
   content: "";
   width: .5rem;
@@ -227,8 +243,16 @@ a.tarjeta:active { transform: translateY(0); }
   border-radius: 50%;
   background: currentColor;
 }
-.etiqueta--disponible { background: var(--ok-fondo); color: var(--ok); }
-.etiqueta--pendiente  { background: var(--pendiente-fondo); color: var(--pendiente); }
+
+.etiqueta--disponible {
+  background: var(--ok-fondo);
+  color: var(--ok);
+}
+
+.etiqueta--pendiente {
+  background: var(--pendiente-fondo);
+  color: var(--pendiente);
+}
 
 .tarjeta__titulo {
   margin: 0 0 .5rem;
@@ -248,7 +272,8 @@ a.tarjeta:active { transform: translateY(0); }
   align-items: center;
   gap: .5rem;
   align-self: flex-start;
-  min-height: 2.75rem;            /* objetivo táctil cómodo */
+  min-height: 2.75rem;
+  /* objetivo táctil cómodo */
   padding: .6rem 1.1rem;
   border-radius: 10px;
   background: var(--riel-medio);
@@ -256,9 +281,15 @@ a.tarjeta:active { transform: translateY(0); }
   font-weight: 700;
   transition: background .2s ease;
 }
-a.tarjeta:hover .tarjeta__accion { background: var(--riel); }
 
-.tarjeta__accion svg { width: 1.1rem; height: 1.1rem; }
+a.tarjeta:hover .tarjeta__accion {
+  background: var(--riel);
+}
+
+.tarjeta__accion svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
 
 .tarjeta--inactiva .tarjeta__accion {
   background: transparent;
@@ -282,25 +313,99 @@ a.tarjeta:hover .tarjeta__accion { background: var(--riel); }
   color: var(--texto-suave);
   font-size: .9375rem;
 }
-.pie p { margin: 0; }
+
+.pie p {
+  margin: 0;
+}
 
 /* ---------- Preferencias del usuario ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     transition: none !important;
     animation: none !important;
   }
-  a.tarjeta:hover { transform: none; }
+
+  a.tarjeta:hover {
+    transform: none;
+  }
 }
 
 @media (forced-colors: active) {
-  .tarjeta { border: 2px solid CanvasText; }
-  .tarjeta__icono { border: 1px solid CanvasText; }
+  .tarjeta {
+    border: 2px solid CanvasText;
+  }
+
+  .tarjeta__icono {
+    border: 1px solid CanvasText;
+  }
 }
 
 @media print {
-  .cabecera { background: none; color: #000; }
-  .cabecera::after, .skip-link { display: none; }
-  .tarjeta { box-shadow: none; }
+  .cabecera {
+    background: none;
+    color: #000;
+  }
+
+  .cabecera::after,
+  .skip-link {
+    display: none;
+  }
+
+  .tarjeta {
+    box-shadow: none;
+  }
+}
+
+/* ---------- Tarjeta con varios links ---------- */
+
+.tarjeta__links {
+  list-style: none;
+  margin: auto 0 0;
+  /* empuja la lista al pie, como .tarjeta__accion */
+  padding: 0;
+  display: grid;
+  gap: .6rem;
+}
+
+.tarjeta__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  min-height: 2.75rem;
+  /* objetivo táctil cómodo */
+  padding: .6rem 1.1rem;
+  border-radius: 10px;
+  background: var(--riel-medio);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+
+a.tarjeta__link:hover {
+  background: var(--riel);
+}
+
+.tarjeta__link svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+}
+
+.tarjeta__link--inactivo {
+  background: transparent;
+  border: 1px dashed var(--borde);
+  color: var(--texto-suave);
+  font-weight: 400;
+}
+
+@media (forced-colors: active) {
+  .tarjeta__link {
+    border: 1px solid LinkText;
+  }
 }

@@ -17,6 +17,8 @@
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M3 11h18"/><circle cx="8" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/></svg>',
     documento:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>',
+    links:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
     flecha:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>'
   };
@@ -31,17 +33,70 @@
     return el;
   }
 
-  function construirTarjeta(modulo) {
-    const disponible = typeof modulo.url === "string" && modulo.url.trim() !== "";
+  function tieneUrl(u) {
+    return typeof u === "string" && u.trim() !== "";
+  }
 
-    // Tarjeta activa = enlace completo; inactiva = bloque sin enlace
-    const tarjeta = disponible ? crear("a", "tarjeta") : crear("div", "tarjeta tarjeta--inactiva");
-    if (disponible) {
+  // Módulo con varios enlaces (campo "links") vs. módulo con un solo "url"
+  function esMultiple(modulo) {
+    return Array.isArray(modulo.links) && modulo.links.length > 0;
+  }
+
+  function estaDisponible(modulo) {
+    return esMultiple(modulo)
+      ? modulo.links.some(function (l) { return tieneUrl(l.url); })
+      : tieneUrl(modulo.url);
+  }
+
+  function agregarFlecha(destino) {
+    const flecha = crear("span");
+    flecha.innerHTML = ICONOS.flecha;
+    destino.append(flecha.firstChild);
+  }
+
+  function construirLink(link, externo) {
+    const li = crear("li");
+
+    if (tieneUrl(link.url)) {
+      const a = crear("a", "tarjeta__link");
+      a.href = link.url;
+      if (externo) {
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      }
+      a.append(document.createTextNode(link.etiqueta));
+      agregarFlecha(a);
+      if (externo) {
+        a.append(crear("span", "solo-lector", " (se abre en una pestaña nueva)"));
+      }
+      li.appendChild(a);
+    } else {
+      li.appendChild(
+        crear("span", "tarjeta__link tarjeta__link--inactivo", link.etiqueta + " (pendiente)")
+      );
+    }
+
+    return li;
+  }
+
+  function construirTarjeta(modulo) {
+    const multiple = esMultiple(modulo);
+    const disponible = estaDisponible(modulo);
+
+    // Varios links: la tarjeta es un bloque (los <a> van adentro, no se pueden anidar).
+    // Un solo link: la tarjeta completa es el enlace. Sin link: bloque inactivo.
+    let tarjeta;
+    if (multiple) {
+      tarjeta = crear("div", "tarjeta tarjeta--multiple");
+    } else if (disponible) {
+      tarjeta = crear("a", "tarjeta");
       tarjeta.href = modulo.url;
       if (modulo.externo) {
         tarjeta.target = "_blank";
         tarjeta.rel = "noopener noreferrer";
       }
+    } else {
+      tarjeta = crear("div", "tarjeta tarjeta--inactiva");
     }
 
     // Cabecera: icono + estado
@@ -59,22 +114,28 @@
     // Contenido
     const titulo = crear("h3", "tarjeta__titulo", modulo.titulo);
     const texto = crear("p", "tarjeta__texto", modulo.descripcion);
+    tarjeta.append(cabecera, titulo, texto);
 
-    // Acción
-    const accion = crear("span", "tarjeta__accion");
-    if (disponible) {
-      accion.append(document.createTextNode(modulo.accion || "Abrir"));
-      const flecha = crear("span");
-      flecha.innerHTML = ICONOS.flecha;
-      accion.append(flecha.firstChild);
-      if (modulo.externo) {
-        accion.append(crear("span", "solo-lector", " (se abre en una pestaña nueva)"));
-      }
+    // Pie: lista de links o botón de acción único
+    if (multiple) {
+      const lista = crear("ul", "tarjeta__links");
+      modulo.links.forEach(function (l) {
+        lista.appendChild(construirLink(l, modulo.externo));
+      });
+      tarjeta.appendChild(lista);
     } else {
-      accion.textContent = "Enlace pendiente de configurar";
+      const accion = crear("span", "tarjeta__accion");
+      if (disponible) {
+        accion.append(document.createTextNode(modulo.accion || "Abrir"));
+        agregarFlecha(accion);
+        if (modulo.externo) {
+          accion.append(crear("span", "solo-lector", " (se abre en una pestaña nueva)"));
+        }
+      } else {
+        accion.textContent = "Enlace pendiente de configurar";
+      }
+      tarjeta.appendChild(accion);
     }
-
-    tarjeta.append(cabecera, titulo, texto, accion);
 
     const item = crear("li");
     item.appendChild(tarjeta);
@@ -86,9 +147,7 @@
 
     grilla.replaceChildren(...MODULOS.map(construirTarjeta));
 
-    const disponibles = MODULOS.filter(function (m) {
-      return typeof m.url === "string" && m.url.trim() !== "";
-    }).length;
+    const disponibles = MODULOS.filter(estaDisponible).length;
 
     resumen.textContent =
       disponibles + (disponibles === 1 ? " módulo disponible" : " módulos disponibles");
