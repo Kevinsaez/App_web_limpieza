@@ -1,0 +1,306 @@
+/* ==========================================================
+   Portal · Administración de limpieza · Ferrocarril San Martín
+   ========================================================== */
+
+:root {
+  --riel: #0f2a43;          /* azul riel: cabecera y textos fuertes */
+  --riel-medio: #1d4a73;    /* acento principal, enlaces y botones */
+  --senal: #f2b705;         /* amarillo de señalización, uso mínimo */
+  --fondo: #eef2f6;
+  --superficie: #ffffff;
+  --borde: #d3dce6;
+  --texto: #14202c;
+  --texto-suave: #4a5a6a;
+  --ok: #176b3a;
+  --ok-fondo: #e1f3e8;
+  --pendiente: #7a4b00;
+  --pendiente-fondo: #fdf0d2;
+
+  --radio: 14px;
+  --sombra: 0 1px 2px rgba(15, 42, 67, .08), 0 6px 18px rgba(15, 42, 67, .07);
+  --sombra-hover: 0 2px 4px rgba(15, 42, 67, .10), 0 12px 28px rgba(15, 42, 67, .14);
+  --ancho: 1120px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--texto);
+  background: var(--fondo);
+}
+
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+/* ---------- Accesibilidad ---------- */
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 10;
+  padding: .75rem 1rem;
+  background: var(--senal);
+  color: var(--riel);
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
+
+:focus-visible {
+  outline: 3px solid var(--senal);
+  outline-offset: 3px;
+}
+
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Cabecera ---------- */
+
+.cabecera {
+  position: relative;
+  background: var(--riel);
+  color: #fff;
+  padding-block: clamp(2rem, 6vw, 3.5rem) clamp(2.25rem, 6vw, 3.75rem);
+}
+
+/* Cinta de durmientes: la única decoración de la página */
+.cabecera::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--senal) 0 28px,
+    transparent 28px 40px
+  );
+}
+
+.cabecera__linea {
+  margin: 0 0 .5rem;
+  font-size: 1rem;
+  color: #b9cde0;
+}
+
+.cabecera__titulo {
+  margin: 0;
+  font-size: clamp(1.9rem, 5.5vw, 3rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.cabecera__texto {
+  margin: .9rem 0 0;
+  max-width: 52ch;
+  color: #dbe7f2;
+}
+
+/* ---------- Contenido ---------- */
+
+.principal {
+  flex: 1;
+  padding-block: clamp(1.75rem, 5vw, 3rem);
+}
+
+.principal__encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .25rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.principal__titulo {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.principal__resumen {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: .9375rem;
+}
+
+/* ---------- Grilla y tarjetas ---------- */
+
+.grilla {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+.tarjeta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+a.tarjeta:hover {
+  border-color: var(--riel-medio);
+  box-shadow: var(--sombra-hover);
+  transform: translateY(-2px);
+}
+
+a.tarjeta:active { transform: translateY(0); }
+
+.tarjeta--inactiva {
+  background: #f7f9fb;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.tarjeta__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: 1.1rem;
+}
+
+.tarjeta__icono {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 12px;
+  background: var(--riel);
+  color: #fff;
+}
+
+.tarjeta--inactiva .tarjeta__icono {
+  background: #dbe3ec;
+  color: var(--texto-suave);
+}
+
+.tarjeta__icono svg { width: 1.7rem; height: 1.7rem; }
+
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .25rem .65rem;
+  border-radius: 999px;
+  font-size: .875rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.etiqueta::before {
+  content: "";
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.etiqueta--disponible { background: var(--ok-fondo); color: var(--ok); }
+.etiqueta--pendiente  { background: var(--pendiente-fondo); color: var(--pendiente); }
+
+.tarjeta__titulo {
+  margin: 0 0 .5rem;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: var(--riel);
+}
+
+.tarjeta__texto {
+  margin: 0 0 1.5rem;
+  color: var(--texto-suave);
+}
+
+.tarjeta__accion {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  align-self: flex-start;
+  min-height: 2.75rem;            /* objetivo táctil cómodo */
+  padding: .6rem 1.1rem;
+  border-radius: 10px;
+  background: var(--riel-medio);
+  color: #fff;
+  font-weight: 700;
+  transition: background .2s ease;
+}
+a.tarjeta:hover .tarjeta__accion { background: var(--riel); }
+
+.tarjeta__accion svg { width: 1.1rem; height: 1.1rem; }
+
+.tarjeta--inactiva .tarjeta__accion {
+  background: transparent;
+  color: var(--texto-suave);
+  padding-inline: 0;
+  font-weight: 400;
+}
+
+.aviso {
+  padding: 1rem 1.25rem;
+  background: var(--pendiente-fondo);
+  color: var(--pendiente);
+  border-radius: var(--radio);
+}
+
+/* ---------- Pie ---------- */
+
+.pie {
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--borde);
+  color: var(--texto-suave);
+  font-size: .9375rem;
+}
+.pie p { margin: 0; }
+
+/* ---------- Preferencias del usuario ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  a.tarjeta:hover { transform: none; }
+}
+
+@media (forced-colors: active) {
+  .tarjeta { border: 2px solid CanvasText; }
+  .tarjeta__icono { border: 1px solid CanvasText; }
+}
+
+@media print {
+  .cabecera { background: none; color: #000; }
+  .cabecera::after, .skip-link { display: none; }
+  .tarjeta { box-shadow: none; }
+}

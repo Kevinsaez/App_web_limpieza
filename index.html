@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración de limpieza · Ferrocarril San Martín</title>
+  <meta name="description" content="Portal de gestión de la administración de limpieza del Ferrocarril San Martín.">
+  <meta name="theme-color" content="#0f2a43">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor">
+      <p class="cabecera__linea">Ferrocarril San Martín</p>
+      <h1 class="cabecera__titulo">Administración de limpieza</h1>
+      <p class="cabecera__texto">Accedé a los tableros y herramientas de gestión desde un solo lugar.</p>
+    </div>
+  </header>
+
+  <main id="contenido" class="contenedor principal">
+    <div class="principal__encabezado">
+      <h2 id="titulo-modulos" class="principal__titulo">Módulos</h2>
+      <p id="resumen" class="principal__resumen" aria-live="polite"></p>
+    </div>
+
+    <ul id="grilla" class="grilla" aria-labelledby="titulo-modulos">
+      <noscript>
+        <li class="aviso">Para ver los módulos, activá JavaScript en tu navegador.</li>
+      </noscript>
+    </ul>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p>Administración de limpieza · Ferrocarril San Martín</p>
+    </div>
+  </footer>
+
+  <script src="modulos.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
